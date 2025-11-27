@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+# Easy Budget App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> A simple budget tracking web app prototype built with React and Firebase.  
+> This app will eventually be converted into a cross-platform native app.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+Easy Budget App is a lightweight and easy-to-use budget management tool.  
+Its main goal is to allow users to track and manage their finances quickly, using a top-down input method rather than entering every transaction individually.
 
-### `npm start`
+Key features of this prototype:
+- Set up multiple bank accounts with nickname and bank name.
+- Register initial balances for the current month.
+- Update balances in case of previous month discrepancies.
+- Add transactions individually or grouped by categories (e.g., monthly card payments, insurance, utilities).
+- Multi-level categorization: top-level summary → category sums → individual transactions.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech Stack
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Frontend:** React
+- **Backend/Database:** Firebase Firestore
+- **Authentication & Hosting:** Firebase (for now, web prototype)
 
-### `npm test`
+## Future Plans
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Convert the web prototype into a cross-platform native app using React Native.
+- Add additional features such as reports, charts, and offline support.
+- Implement automated GitHub Actions workflow for continuous deployment.
 
-### `npm run build`
+## Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+```bash
+git clone https://github.com/jkandrea/easy-budget-app.git
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Deployment (GitHub Actions → Firebase Hosting)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This repository is configured to automatically build and deploy the React app to Firebase Hosting when a push is made to the `main` branch.
 
-### `npm run eject`
+- Workflow file: `.github/workflows/firebase-hosting-merge.yml`
+- Firebase config: `firebase.json` (publishes `build` folder)
+- Required GitHub Secrets:
+	- `FIREBASE_SERVICE_ACCOUNT` — Firebase service account JSON (already added)
+	- `FIREBASE_PROJECT_ID` — *optional* (the service account JSON usually contains `project_id`; you only need this secret if you want to set the project explicitly)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Before pushing, ensure the `FIREBASE_SERVICE_ACCOUNT` secret is present in the repository settings. After pushing to `main`, check GitHub Actions → the workflow run logs for build and deploy status.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+To push the deployment changes from Windows `cmd.exe`:
+```cmd
+git add firebase.json .github/workflows/firebase-hosting-merge.yml README.md
+git commit -m "Add Firebase Hosting config, workflow and README deployment notes"
+git push origin main
+```
