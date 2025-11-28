@@ -15,9 +15,6 @@ function App() {
       </header>
 
       <main>
-        <div style={{padding:12, background:'#fff8dc', borderBottom:'1px solid #f0e0b0'}}>
-          <strong>Firebase 프로젝트:</strong> {firebaseProjectId || '(설정 없음 - .env 확인)'}
-        </div>
         {!selected && <AccountList onSelect={acc=>setSelected(acc)} />}
         {selected && <AccountDetail account={selected} onBack={()=>setSelected(null)} />}
       </main>

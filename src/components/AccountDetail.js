@@ -21,7 +21,7 @@ export default function AccountDetail({ account, onBack }){
       setTransactions(snap.docs.map(d=>({id:d.id,...d.data()})));
     });
     return unsub;
-  },[account?.id]);
+  },[account]);
 
   async function saveBalances(){
     try {
