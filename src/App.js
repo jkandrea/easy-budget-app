@@ -5,7 +5,7 @@ import AccountDetail from './components/AccountDetail';
 
 function App() {
   const [selected, setSelected] = useState(null);
-  const firebaseProjectId = process.env.REACT_APP_FIRE_PROJECT_ID;
+  // const firebaseProjectId = process.env.REACT_APP_FIRE_PROJECT_ID;
 
   return (
     <div className="App">

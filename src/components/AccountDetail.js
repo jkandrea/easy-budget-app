@@ -15,7 +15,11 @@ export default function AccountDetail({ account, onBack }){
     setLastEnding(account?.lastMonthEnding ?? 0);
     // 이번달 시작 잔액은 기본적으로 지난달 마감액과 동일하게 사용합니다.
     setStarting(account?.startingAmount ?? account?.lastMonthEnding ?? 0);
-    if (!account) return;
+    // If there's no account or the account hasn't been saved (no id), clear transactions and skip subscribing.
+    if (!account || !account.id) {
+      setTransactions([]);
+      return;
+    }
     const q = query(collection(db, `accounts/${account.id}/transactions`), orderBy('createdAt','desc'));
     const unsub = onSnapshot(q, snap=>{
       setTransactions(snap.docs.map(d=>({id:d.id,...d.data()})));
@@ -24,6 +28,11 @@ export default function AccountDetail({ account, onBack }){
   },[account]);
 
   async function saveBalances(){
+    if (!account || !account.id) {
+      // eslint-disable-next-line no-alert
+      alert('계정이 아직 없습니다. 첫번째 계정을 추가하세요.');
+      return;
+    }
     try {
       const ref = doc(db, 'accounts', account.id);
       // 이번달 시작 잔액은 지난달 마감액을 그대로 사용합니다.
@@ -40,6 +49,11 @@ export default function AccountDetail({ account, onBack }){
 
   async function addTransaction(){
     if(!txDesc || !txAmount) return;
+    if (!account || !account.id) {
+      // eslint-disable-next-line no-alert
+      alert('계정이 아직 없습니다. 첫번째 계정을 추가하세요.');
+      return;
+    }
     try {
       await addDoc(collection(db, `accounts/${account.id}/transactions`), {
         description: txDesc,
@@ -52,7 +66,7 @@ export default function AccountDetail({ account, onBack }){
       // eslint-disable-next-line no-console
       console.error('Failed to add transaction:', err);
       // eslint-disable-next-line no-alert
-      alert('거래 추가 중 오류가 발생했습니다. 콘솔을 확인하세요.');
+      alert('내역 추가 중 오류가 발생했습니다. 콘솔을 확인하세요.');
     }
   }
 
