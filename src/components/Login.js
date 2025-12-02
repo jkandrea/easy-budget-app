@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, googleProvider, /* facebookProvider, */ signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, fbSetPersistence, browserLocalPersistence, browserSessionPersistence } from '../firebase';
+import { auth, googleProvider, /* facebookProvider, */ signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, fbSetPersistence, browserLocalPersistence, browserSessionPersistence } from '../firebase';
 
 export default function Login(){
   const [email, setEmail] = useState('');

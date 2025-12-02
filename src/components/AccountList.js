@@ -14,7 +14,7 @@ export default function AccountList({ user, onSelect }) {
       setAccounts(arr);
     });
     return unsub;
-  }, [user?.uid]);
+  }, [user]);
 
   async function handleAdd() {
     if (!nick.trim() || !bank.trim()) return;

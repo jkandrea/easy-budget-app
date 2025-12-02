@@ -3,7 +3,7 @@ import './App.css';
 import AccountList from './components/AccountList';
 import AccountDetail from './components/AccountDetail';
 import Login from './components/Login';
-import { auth, fbSignOut, onAuthStateChanged, getRedirectResult, fbSetPersistence, browserLocalPersistence } from './firebase';
+import { auth, fbSignOut, onAuthStateChanged } from './firebase';
 
 function App() {
   const [selected, setSelected] = useState(null);

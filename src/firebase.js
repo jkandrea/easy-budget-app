@@ -2,7 +2,7 @@
 // Provide config via environment variables in .env: REACT_APP_FIRE_API_KEY, REACT_APP_FIRE_AUTH_DOMAIN, REACT_APP_FIRE_PROJECT_ID, REACT_APP_FIRE_STORAGE_BUCKET, REACT_APP_FIRE_MESSAGING_SENDER_ID, REACT_APP_FIRE_APP_ID
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, orderBy, writeBatch, setDoc } from 'firebase/firestore';
-import { getAuth, initializeAuth, GoogleAuthProvider, /* FacebookAuthProvider, */ signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as fbSignOut, onAuthStateChanged, setPersistence as fbSetPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, /* FacebookAuthProvider, */ signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as fbSignOut, onAuthStateChanged, setPersistence as fbSetPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIRE_API_KEY,
