@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { db, doc, updateDoc, collection, addDoc, onSnapshot, query, orderBy } from '../firebase';
+import { db, doc, setDoc, collection, addDoc, onSnapshot, query, orderBy } from '../firebase';
 
-export default function AccountDetail({ account, onBack }){
+export default function AccountDetail({ user, account, onBack }){
   const [local, setLocal] = useState(account);
   const [lastEnding, setLastEnding] = useState(account?.lastMonthEnding ?? 0);
   const [starting, setStarting] = useState(account?.startingAmount ?? account?.lastMonthEnding ?? 0);
@@ -20,12 +20,13 @@ export default function AccountDetail({ account, onBack }){
       setTransactions([]);
       return;
     }
-    const q = query(collection(db, `accounts/${account.id}/transactions`), orderBy('createdAt','desc'));
+    // userAccounts 하위의 transactions 컬렉션 사용
+    const q = query(collection(db, `userAccounts/${user.uid}/accounts/${account.id}/transactions`), orderBy('createdAt','desc'));
     const unsub = onSnapshot(q, snap=>{
       setTransactions(snap.docs.map(d=>({id:d.id,...d.data()})));
     });
     return unsub;
-  },[account]);
+  },[account, user?.uid]);
 
   async function saveBalances(){
     if (!account || !account.id) {
@@ -34,16 +35,24 @@ export default function AccountDetail({ account, onBack }){
       return;
     }
     try {
-      const ref = doc(db, 'accounts', account.id);
+      // userAccounts 하위의 계정 문서만 업데이트
+      const userMapRef = doc(db, 'userAccounts', user.uid, 'accounts', account.id);
+      
       // 이번달 시작 잔액은 지난달 마감액을 그대로 사용합니다.
       const startVal = Number(lastEnding);
-      await updateDoc(ref, { lastMonthEnding: Number(lastEnding), startingAmount: startVal });
+      
+      await setDoc(userMapRef, {
+        lastMonthEnding: Number(lastEnding),
+        startingAmount: startVal
+      }, { merge: true });
+
       setStarting(startVal);
+      alert('잔액이 저장되었습니다.');
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Failed to save balances:', err);
       // eslint-disable-next-line no-alert
-      alert('잔액 저장 중 오류가 발생했습니다. 콘솔을 확인하세요.');
+      alert(`잔액 저장 중 오류가 발생했습니다: ${err.message}`);
     }
   }
 
@@ -55,7 +64,8 @@ export default function AccountDetail({ account, onBack }){
       return;
     }
     try {
-      await addDoc(collection(db, `accounts/${account.id}/transactions`), {
+      // userAccounts 하위의 transactions 컬렉션에 추가
+      await addDoc(collection(db, `userAccounts/${user.uid}/accounts/${account.id}/transactions`), {
         description: txDesc,
         amount: Number(txAmount),
         category: txCategory,

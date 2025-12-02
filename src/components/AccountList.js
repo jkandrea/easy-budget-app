@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { db, collection, addDoc, onSnapshot, query, orderBy } from '../firebase';
+import { db, collection, onSnapshot, query, orderBy, addDoc } from '../firebase';
 
-export default function AccountList({ onSelect }) {
+export default function AccountList({ user, onSelect }) {
   const [accounts, setAccounts] = useState([]);
   const [nick, setNick] = useState('');
   const [bank, setBank] = useState('');
 
   useEffect(() => {
-    const q = query(collection(db, 'accounts'), orderBy('createdAt', 'desc'));
+    if (!user) { setAccounts([]); return undefined; }
+    const q = query(collection(db, 'userAccounts', user.uid, 'accounts'), orderBy('createdAt', 'desc'));
     const unsub = onSnapshot(q, (snap) => {
       const arr = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       setAccounts(arr);
     });
     return unsub;
-  }, []);
+  }, [user?.uid]);
 
   async function handleAdd() {
     if (!nick.trim() || !bank.trim()) return;
     try {
-      await addDoc(collection(db, 'accounts'), {
+      const now = Date.now();
+      // 사용자별 계정(userAccounts/{uid}/accounts)에 직접 추가
+      // 상위 accounts 컬렉션은 사용하지 않음
+      await addDoc(collection(db, 'userAccounts', user.uid, 'accounts'), {
         nickname: nick.trim(),
         bank: bank.trim(),
-        createdAt: Date.now(),
-        // starting balances stored per month; we store lastMonthEnding and startingAmount
+        role: 'owner',
+        createdAt: now,
         lastMonthEnding: 0,
         startingAmount: 0
       });
+      
       setNick(''); setBank('');
     } catch (err) {
       // eslint-disable-next-line no-console
